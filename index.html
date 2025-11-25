@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Dracin Fais Dobleng</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Russo+One&family=Share+Tech+Mono&family=Audiowide&display=swap" rel="stylesheet">
+<style>
+body, html {margin:0; padding:0; font-family: 'Orbitron', sans-serif; color:#fff; height:100%; width:100%; display:flex; justify-content:center; align-items:center; background:#000; overflow:hidden;}
+.background {position:fixed; top:0; left:0; width:100%; height:100%; background: url('https://i.ibb.co/KxY5zhQ1/images-4.jpg') no-repeat center center/cover; filter: grayscale(100%); z-index:0;}
+.overlay {position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); z-index:1;}
+.lines {position: fixed; top:0; left:0; width:100%; height:100%; background: repeating-linear-gradient(45deg, rgba(255,255,255,0.05), rgba(255,255,255,0.05) 1px, transparent 1px, transparent 20px); animation: moveLines 5s linear infinite; z-index:2; pointer-events:none;}
+@keyframes moveLines {0% {background-position:0 0;} 100% {background-position:100px 100px;}}
+.container {position:relative; z-index:3; width:100%; max-width:700px; padding:20px; background: rgba(0,0,0,0.25); border-radius:15px; display:flex; flex-direction:column; align-items:center; box-shadow:0 0 20px #00f;}
+h1 {font-family:'Russo One', sans-serif; font-size:2em; margin-bottom:10px; text-align:center; text-shadow:0 0 10px #0ff,0 0 20px #0ff;}
+.instructions {margin-bottom:15px; text-align:center; font-family:'Orbitron', sans-serif; color:#0ff;}
+.instructions span.video {color:red; font-weight:bold;}
+.instructions span.wa {color:yellow; font-weight:bold;}
+input {padding:10px; width:100%; font-size:1em; border-radius:10px; border:1px solid #0ff; outline:none; margin-bottom:10px; background: rgba(0,0,0,0.2); color:#fff; box-shadow:0 0 10px #0ff;}
+input:focus {box-shadow:0 0 15px #0ff; border-color:#0ff;}
+button {padding:10px 20px; font-size:1em; border:none; border-radius:10px; cursor:pointer; background: linear-gradient(45deg,#0ff,#00f); color:#000; transition:0.2s; box-shadow:0 0 10px #0ff;}
+button:hover {transform: scale(1.05); box-shadow:0 0 20px #0ff,0 0 30px #0ff;}
+#chatSection {display:none; width:100%; flex-direction:column;}
+.chat-box {background: rgba(0,0,0,0.2); border-radius:15px; width:100%; max-width:700px; padding:20px; min-height:200px; overflow-y:auto; box-shadow:0 0 20px #0ff;}
+.chat-input {width:100%; display:flex; margin-top:10px;}
+.bubble {background: rgba(0,255,255,0.05); border-radius:15px; padding:10px; margin:10px 0; opacity:0; transform: translateY(20px); animation: bubbleFade 0.7s forwards; text-shadow:0 0 5px #0ff;}
+.user {background: rgba(0,255,255,0.1); font-family:'Share Tech Mono'; align-self:flex-end;}
+.bot {background: rgba(0,255,255,0.05); font-family:'Audiowide'; align-self:flex-start; animation: glowBot 1.5s infinite alternate;}
+@keyframes glowBot {0% {text-shadow:0 0 5px #0ff;} 100% {text-shadow:0 0 15px #0ff,0 0 20px #0ff;}}
+video {width:100%; max-width:100%; height:315px; border-radius:15px; box-shadow:0 0 25px #0ff; margin-top:10px; opacity:0; transform: translateY(20px); animation: bubbleFade 0.7s forwards;}
+.message-label {text-shadow:0 0 10px #0ff; opacity:0; transform: translateY(20px); animation: bubbleFade 0.7s forwards; margin-top:10px;}
+@keyframes bubbleFade {to {opacity:1; transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<div class="background"></div>
+<div class="overlay"></div>
+<div class="lines"></div>
+
+<div class="container" id="loginSection">
+<h1>Masukkan Kode untuk Masuk</h1>
+<div class="instructions">
+<div>Masukkan kode: <span>DOBLENG GANTENG</span> <button onclick="copyCode()">Salin Kode</button></div>
+<div>Ketik <span class="video">'Kirim Vidio Dracin'</span> untuk menampilkan video Dewa Perang</div>
+<div>Ketik <span class="video">'Kirim Vidio Dracin CEO'</span> untuk menampilkan video CEO</div>
+<div>Ketik <span class="wa">'Nomor WhatsApp'</span> untuk menampilkan WA</div>
+</div>
+<input type="text" id="loginInput" placeholder="Masukkan kode">
+<button onclick="checkCode()">Masuk</button>
+<div id="loginMessage" style="margin-top:10px;color:red;"></div>
+</div>
+
+<div class="container" id="chatSection">
+<header style="font-family:'Russo One';">AI Dracin Fais Dobleng</header>
+<div class="chat-box" id="chatBox">
+<div class="bubble bot">Selamat datang! Ketik <b class="video">'Kirim Vidio Dracin'</b>, <b class="video">'Kirim Vidio Dracin CEO'</b> atau <b class="wa">'Nomor WhatsApp'</b>.</div>
+</div>
+<div class="chat-input">
+<input type="text" id="userInput" placeholder="Ketik pesan...">
+<button onclick="sendMessage()">Kirim</button>
+</div>
+<footer style="margin-top:20px;color:#0ff;">Tools ini dibuat oleh developer Fais Dobleng</footer>
+</div>
+
+<script>
+function copyCode(){
+    navigator.clipboard.writeText('DOBLENG GANTENG').then(()=>{alert('Kode DOBLENG GANTENG berhasil disalin!');});
+}
+
+const correctCode="DOBLENG GANTENG";
+function checkCode(){
+    const val=document.getElementById('loginInput').value.trim();
+    const msg=document.getElementById('loginMessage');
+    if(val===correctCode){
+        document.getElementById('loginSection').style.display='none';
+        document.getElementById('chatSection').style.display='flex';
+    } else { msg.textContent='Kode salah! Masukkan kode yang benar.'; }
+}
+
+// Link MP4 dari folder public di Vercel
+const dracinVideos=[
+'/video1.mp4',
+'/video2.mp4',
+'/video3.mp4',
+'/video4.mp4'
+];
+const ceoVideos=[
+'/videoCEO1.mp4',
+'/videoCEO2.mp4',
+'/videoCEO3.mp4',
+'/videoCEO4.mp4'
+];
+let currentDracin=0;
+let currentCEO=0;
+
+function sleep(ms){ return new Promise(resolve=>setTimeout(resolve,ms)); }
+
+async function sendMessage(){
+    const input=document.getElementById('userInput');
+    const chatBox=document.getElementById('chatBox');
+    const message=input.value.trim();
+    if(message==='') return;
+
+    const userDiv=document.createElement('div');
+    userDiv.className='bubble user';
+    userDiv.textContent='Kamu: '+message;
+    chatBox.appendChild(userDiv);
+    chatBox.scrollTop=chatBox.scrollHeight;
+
+    if(message.toLowerCase()==='kirim vidio dracin'){
+        const dots=document.createElement('div');
+        dots.className='bubble bot';
+        dots.textContent='Memproses •••';
+        chatBox.appendChild(dots);
+        chatBox.scrollTop=chatBox.scrollHeight;
+        await sleep(1500);
+        dots.style.display='none';
+
+        if(currentDracin<dracinVideos.length){
+            const label=document.createElement('div');
+            label.className='message-label';
+            label.textContent='Ini vidionya Dari Asisten Mas Dobleng, Semoga Suka😍🔞';
+            chatBox.appendChild(label);
+            await sleep(300);
+            const video=document.createElement('video');
+            video.src=dracinVideos[currentDracin];
+            video.controls=true;
+            video.autoplay=true;
+            chatBox.appendChild(video);
+            currentDracin++;
+        } else {
+            const done=document.createElement('div');
+            done.className='bubble bot';
+            done.textContent='Semua video Dewa Perang sudah ditampilkan!';
+            chatBox.appendChild(done);
+        }
+    } else if(message.toLowerCase()==='kirim vidio dracin ceo'){
+        const dots=document.createElement('div');
+        dots.className='bubble bot';
+        dots.textContent='Memproses •••';
+        chatBox.appendChild(dots);
+        chatBox.scrollTop=chatBox.scrollHeight;
+        await sleep(1500);
+        dots.style.display='none';
+
+        if(currentCEO<ceoVideos.length){
+            const label=document.createElement('div');
+            label.className='message-label';
+            label.textContent='Ini vidionya Dari Asisten Mas Dobleng, Semoga Suka😍🔞';
+            chatBox.appendChild(label);
+            await sleep(300);
+            const video=document.createElement('video');
+            video.src=ceoVideos[currentCEO];
+            video.controls=true;
+            video.autoplay=true;
+            chatBox.appendChild(video);
+            currentCEO++;
+        } else {
+            const done=document.createElement('div');
+            done.className='bubble bot';
+            done.textContent='Semua video CEO sudah ditampilkan!';
+            chatBox.appendChild(done);
+        }
+    } else if(message.toLowerCase()==='nomor whatsapp'){
+        const wa=document.createElement('div');
+        wa.className='bubble bot';
+        wa.innerHTML='Klik link ini untuk WhatsApp Dobleng: <a href="https://wa.me/085716768185" target="_blank" style="color:yellow;">WA</a>';
+        chatBox.appendChild(wa);
+    } else {
+        const botDiv=document.createElement('div');
+        botDiv.className='bubble bot';
+        botDiv.textContent='Bot: Tidak mengerti. Ketik "Kirim Vidio Dracin", "Kirim Vidio Dracin CEO" atau "Nomor WhatsApp".';
+        chatBox.appendChild(botDiv);
+    }
+    chatBox.scrollTop=chatBox.scrollHeight;
+    input.value='';
+}
+</script>
+
+</body>
+</html>
